@@ -1,0 +1,18 @@
+listen = 80
+server_name = "search.local"
+
+[[custom_keywords]]
+phrase = "nginx"
+dest = "wikipedia"
+
+[[custom_keywords]]
+phrase = "New York"
+dest = "wikipedia"
+
+[[custom_keywords]]
+phrase = "openai"
+dest = "wikipedia"
+
+[[custom_keywords]]
+phrase = "cat pictures"
+dest = "google_images"
