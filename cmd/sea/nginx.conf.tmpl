@@ -1,0 +1,30 @@
+map $arg_q $dest {
+    default google;
+    ~*(?i)^\s*how\s+to\b                chatgpt;
+    ~*(?i)^\s*what\s+is\b               chatgpt;
+    ~*(?i)^\s*(when|where|why)\b         chatgpt;
+    ~*(?i)^\s*who\s+(?:is|was)\b       wikipedia;
+    ~*(?i)\bpictures?\s+of\b            google_images;
+    ~*(?i)\bvs\b                        google;
+    ~*(?i)\bdownload\b                   google;
+    ~*(?i)\bwikipedia\b|\bwiki\b        wikipedia;
+{{- range .CustomKeywords }}
+    ~*(?i)^{{ escape .Phrase }}$                {{ .Dest }};
+{{- end }}
+}
+
+map $dest $target {
+    google        "https://www.google.com/search?q=$arg_q";
+    google_images "https://www.google.com/search?tbm=isch&q=$arg_q";
+    chatgpt       "https://chat.openai.com/?q=$arg_q";
+    wikipedia     "https://en.wikipedia.org/wiki/$arg_q";
+}
+
+server {
+    listen {{ .Listen }};
+    server_name {{ .ServerName }};
+
+    location / {
+        return 302 $target;
+    }
+}
