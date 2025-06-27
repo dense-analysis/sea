@@ -14,9 +14,16 @@ import (
 
 // Config represents the TOML configuration structure.
 type Config struct {
-	Listen         int           `toml:"listen"`
-	ServerName     string        `toml:"server_name"`
-	CustomKeywords []KeywordRule `toml:"custom_keywords"`
+        Listen         int           `toml:"listen"`
+        ServerName     string        `toml:"server_name"`
+        CustomKeywords []KeywordRule `toml:"custom_keywords"`
+}
+
+// TemplateData combines the parsed configuration with the destination
+// to URL mappings used to construct the final nginx file.
+type TemplateData struct {
+        Config
+        Targets map[string]string
 }
 
 // KeywordRule maps a phrase to a destination.
@@ -66,18 +73,29 @@ func loadConfig(path string) (Config, error) {
 // generateNginx assembles the nginx configuration using heuristics
 // and any custom keyword rules from the configuration file.
 func generateNginx(cfg Config) (string, error) {
-	tmpl, err := template.New("nginx.conf.tmpl").Funcs(template.FuncMap{
-		"escape": escapeSpace,
-	}).ParseFS(templateFS, "nginx.conf.tmpl")
-	if err != nil {
-		return "", err
-	}
+        tmpl, err := template.New("nginx.conf.tmpl").Funcs(template.FuncMap{
+                "escape": escapeSpace,
+        }).ParseFS(templateFS, "nginx.conf.tmpl")
+        if err != nil {
+                return "", err
+        }
 
-	var b bytes.Buffer
-	if err := tmpl.Execute(&b, cfg); err != nil {
-		return "", err
-	}
-	return b.String(), nil
+        data := TemplateData{
+                Config: cfg,
+                Targets: map[string]string{
+                        "google":        "https://www.google.com/search?q=$arg_q",
+                        "chatgpt":       "https://chat.openai.com/?q=$arg_q",
+                        "wikipedia":     "https://en.wikipedia.org/wiki/$arg_q",
+                        "google_images": "https://www.google.com/search?tbm=isch&q=$arg_q",
+                        "google_maps":   "https://www.google.com/maps/search/?q=$arg_q",
+                },
+        }
+
+        var b bytes.Buffer
+        if err := tmpl.Execute(&b, data); err != nil {
+                return "", err
+        }
+        return b.String(), nil
 }
 
 func escapeSpace(s string) string {
