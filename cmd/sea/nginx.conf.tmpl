@@ -1,23 +1,29 @@
+# Map routes search queries to the appropriate backend.
+# Regex is evaluated once per request; enable `pcre_jit` for best speed.
 map $arg_q $dest {
-    default google;
-    ~*(?i)^\s*how\s+to\b                chatgpt;
-    ~*(?i)^\s*what\s+is\b               chatgpt;
-    ~*(?i)^\s*(when|where|why)\b         chatgpt;
-    ~*(?i)^\s*who\s+(?:is|was)\b       wikipedia;
-    ~*(?i)\bpictures?\s+of\b            google_images;
-    ~*(?i)\bvs\b                        google;
-    ~*(?i)\bdownload\b                   google;
-    ~*(?i)\bwikipedia\b|\bwiki\b        wikipedia;
+    # direct image search
+    ~*(?i)\bpictures?\s+of\b                   google_images; # Google Images
+    # map and direction queries
+    ~*(?i)\b(near\s+me|directions?\s+to|map\s+of)\b  google_maps;  # map/directions
+    # Wikipedia lookups
+    ~*(?i)\b(?:biography|history|life\s+of)\b        wikipedia;     # Wikipedia lookup
+    # question detection
+    ~*(?i)\b(who|what|when|where|why|how|can|could|would|should|do|did|is|are|was|were|am|will|whom|whose|which)\b chatgpt; # question detection
+    # instructional queries
+    ~*(?i)\b(explain|describe|compare|define)\b       chatgpt;       # instructional verbs
+    # explicit wiki keywords
+    ~*(?i)\bwikipedia\b|\bwiki\b                 wikipedia;     # Wikipedia keyword
 {{- range .CustomKeywords }}
     ~*(?i)^{{ escape .Phrase }}$                {{ .Dest }};
 {{- end }}
+    default                                    google;        # default Google search
 }
 
+# Map engine names to full URL targets. Update this list in Go.
 map $dest $target {
-    google        "https://www.google.com/search?q=$arg_q";
-    google_images "https://www.google.com/search?tbm=isch&q=$arg_q";
-    chatgpt       "https://chat.openai.com/?q=$arg_q";
-    wikipedia     "https://en.wikipedia.org/wiki/$arg_q";
+{{- range $name, $url := .Targets }}
+    {{ $name }} {{ $url }};
+{{- end }}
 }
 
 server {
@@ -28,3 +34,4 @@ server {
         return 302 $target;
     }
 }
+
