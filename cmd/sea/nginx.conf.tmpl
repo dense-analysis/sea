@@ -36,15 +36,19 @@ map $arg_q $dest {
 
 # Map engine names to full URL targets. Update this list in Go.
 map $dest $target {
-{{- range $name, $url := .Targets }}
-    {{ $name }} {{ $url }};
-{{- end }}
+    chatgpt https://chatgpt.com/?q=$arg_q;
+    google https://www.google.com/search?q=$arg_q;
+    google_images https://www.google.com/search?tbm=isch&q=$arg_q;
+    google_maps https://www.google.com/maps/search/?q=$arg_q;
+    wikipedia https://en.wikipedia.org/wiki/$arg_q;
 }
 
 {{ if gt .ListenSSL 0 }}
 server {
     listen {{ .ListenSSL }} ssl http2;
+    listen [::]:{{ .ListenSSL }} ssl http2;
     server_name {{ .ServerName }};
+    keepalive_timeout 5;
 {{- if .SSLCertificate }}
     ssl_certificate {{ .SSLCertificate }};
     ssl_certificate_key {{ .SSLCertificateKey }};
@@ -60,13 +64,20 @@ server {
 }
 {{ if .RedirectHTTP }}
 server {
+    if ($host = {{ .ServerName }}) {
+      return 301 https://$host$request_uri;
+    }
+
     listen {{ .Listen }};
+    listen [::]:{{ .Listen }};
     server_name {{ .ServerName }};
-    return 301 https://$host$request_uri;
+
+    return 404;
 }
 {{ else }}
 server {
     listen {{ .Listen }};
+    listen [::]:{{ .Listen }};
     server_name {{ .ServerName }};
 
     location / {
@@ -77,6 +88,7 @@ server {
 {{ else }}
 server {
     listen {{ .Listen }};
+    listen [::]:{{ .Listen }};
     server_name {{ .ServerName }};
 
     location / {
@@ -84,4 +96,3 @@ server {
     }
 }
 {{ end }}
-
