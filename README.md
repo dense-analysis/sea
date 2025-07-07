@@ -35,6 +35,15 @@ vim config.toml
 go run cmd/sea/main.go > sea.conf
 ```
 
+### TLS / Let's Encrypt
+
+If you want to run SEA behind HTTPS using Certbot, set `listen_ssl`,
+`ssl_certificate`, and `ssl_certificate_key` in `config.toml`.  Enable the
+`letsencrypt` and `redirect_http` flags to generate a second server block for
+port 80 that redirects to HTTPS.  The resulting configuration can be safely
+included in your `nginx` setup, and Certbot may modify only the certificate
+paths when certificates renew.
+
 ## Development Requirements
 
 - Go >= 1.22
