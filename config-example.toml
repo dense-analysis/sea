@@ -1,5 +1,5 @@
-listen = 80
-server_name = "search.localhost"
+listen = 3001
+server_name = "your.site"
 
 [[custom_keywords]]
 phrase = "nginx"

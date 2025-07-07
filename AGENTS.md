@@ -11,8 +11,15 @@ go run ./cmd/sea/main.go
 
 `./cmd/sea/nginx.conf.tmpl` is the nginx template, and you should keep
 `nginx.conf` committed to the repository so people don't have to run the program
-to get it. Commit `config.toml` as a default configuration people can override
-if they so choose.
+to get it. Commit `config.example.toml` as an example configuration file people
+can use as per the instructions in `README.md`.
+
+You can re-generate `nginx.go` after changing `nginx.conf.tmpl` or Go sources
+like so:
+
+```sh
+go run ./cmd/sea/main.go > nginx.conf
+```
 
 You can run Go tests like so:
 

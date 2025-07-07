@@ -56,7 +56,7 @@ func main() {
 }
 
 func loadConfig(path string) (Config, error) {
-	cfg := Config{Listen: 80, ServerName: "search.local"}
+	cfg := Config{Listen: 80, ServerName: "search.localhost"}
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {

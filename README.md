@@ -18,6 +18,23 @@ applied to `nginx`.
 - **Optimized Matching**: Regex rules are evaluated once per request using
   NGINX's `map` directive. Enable `pcre_jit` for the best performance.
 
+## Installation
+
+To install into `nginx`, you may include the `nginx.conf` provided in either
+`/etc/nginx/conf.d/*.conf` or in `/etc/nginx/sites-enabled/`.
+
+If you run the Go program to generate a more heavily customised configuration,
+you can do the following:
+
+```sh
+# Copy the config
+cp config-example.toml config.toml
+# Edit the config
+# You might want to change `listen` or `server_name`
+vim config.toml
+go run cmd/sea/main.go > sea.conf
+```
+
 ## Development Requirements
 
 - Go >= 1.22
