@@ -1,0 +1,25 @@
+# AGENTS.md
+
+The purpose of this project is to produce an nginx configuration for redirecting
+to search providers based on the phrases used.
+
+You can run the main executable like so:
+
+```
+go run ./cmd/sea/main.go
+```
+
+`./cmd/sea/nginx.conf.tmpl` is the nginx template, and you should keep
+`nginx.conf` committed to the repository so people don't have to run the program
+to get it. Commit `config.toml` as a default configuration people can override
+if they so choose.
+
+You may validate that the nginx configuration works with the docker compose file
+like so:
+
+```
+# Leave an nginx docker image running on port 57321
+docker compose up
+# Check a redirect. The hostname comes from `server_name` in `config.toml`
+curl -s -D - http://search.localhost:57321/?q=how+can+i -o /dev/null | grep -i '^Location:'
+```

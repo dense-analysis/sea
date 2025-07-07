@@ -1,0 +1,8 @@
+---
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - '57321:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro

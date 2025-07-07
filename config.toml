@@ -1,5 +1,5 @@
 listen = 80
-server_name = "search.local"
+server_name = "search.localhost"
 
 [[custom_keywords]]
 phrase = "nginx"
