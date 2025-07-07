@@ -23,7 +23,7 @@ func extractChatGPTRules(conf string) ([]*regexp.Regexp, []string, error) {
 		if inBlock {
 			l = strings.TrimSpace(l)
 			if m := re.FindStringSubmatch(l); len(m) == 2 {
-				p := strings.Trim(m[1], "()")
+				p := strings.TrimPrefix(strings.TrimSuffix(m[1], ")"), "(")
 				patterns = append(patterns, p)
 			}
 		}
