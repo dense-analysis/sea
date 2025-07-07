@@ -1,6 +1,6 @@
 # Map routes search queries to the appropriate backend.
 # Regex is evaluated once per request; enable `pcre_jit` for best speed.
-map $arg_q $dest {
+map $arg_q $sea_dest {
     # direct image search
     ~*(?i)\bpictures?\s+of\b                         google_images;
     # map and direction queries
@@ -35,7 +35,7 @@ map $arg_q $dest {
 }
 
 # Map engine names to full URL targets. Update this list in Go.
-map $dest $target {
+map $sea_dest $sea_target {
     chatgpt https://chatgpt.com/?q=$arg_q;
     google https://www.google.com/search?q=$arg_q;
     google_images https://www.google.com/search?tbm=isch&q=$arg_q;
@@ -59,7 +59,7 @@ server {
 {{- end }}
 
     location / {
-        return 302 $target;
+        return 302 $sea_target;
     }
 }
 {{ if .RedirectHTTP }}
@@ -81,7 +81,7 @@ server {
     server_name {{ .ServerName }};
 
     location / {
-        return 302 $target;
+        return 302 $sea_target;
     }
 }
 {{ end }}
@@ -92,7 +92,7 @@ server {
     server_name {{ .ServerName }};
 
     location / {
-        return 302 $target;
+        return 302 $sea_target;
     }
 }
 {{ end }}
