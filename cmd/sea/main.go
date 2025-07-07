@@ -19,6 +19,13 @@ type Config struct {
 	CustomKeywords []KeywordRule `toml:"custom_keywords"`
 }
 
+// TemplateData combines the parsed configuration with the destination
+// to URL mappings used to construct the final nginx file.
+type TemplateData struct {
+	Config
+	Targets map[string]string
+}
+
 // KeywordRule maps a phrase to a destination.
 type KeywordRule struct {
 	Phrase string `toml:"phrase"`
@@ -73,8 +80,19 @@ func generateNginx(cfg Config) (string, error) {
 		return "", err
 	}
 
+	data := TemplateData{
+		Config: cfg,
+		Targets: map[string]string{
+			"google":        "https://www.google.com/search?q=$arg_q",
+			"chatgpt":       "https://chatgpt.com/?q=$arg_q",
+			"wikipedia":     "https://en.wikipedia.org/wiki/$arg_q",
+			"google_images": "https://www.google.com/search?tbm=isch&q=$arg_q",
+			"google_maps":   "https://www.google.com/maps/search/?q=$arg_q",
+		},
+	}
+
 	var b bytes.Buffer
-	if err := tmpl.Execute(&b, cfg); err != nil {
+	if err := tmpl.Execute(&b, data); err != nil {
 		return "", err
 	}
 	return b.String(), nil

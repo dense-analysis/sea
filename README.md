@@ -15,6 +15,8 @@ applied to `nginx`.
 - **Simple Configuration**: Ships as a ready-to-use NGINX `.conf` file.
 - **Lightweight & Fast**: Minimal dependencies for high throughput. Very simple
   security profile, as there is no web app to exploit.
+- **Optimized Matching**: Regex rules are evaluated once per request using
+  NGINX's `map` directive. Enable `pcre_jit` for the best performance.
 
 ## Development Requirements
 
