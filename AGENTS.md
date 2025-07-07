@@ -5,7 +5,7 @@ to search providers based on the phrases used.
 
 You can run the main executable like so:
 
-```
+```sh
 go run ./cmd/sea/main.go
 ```
 
@@ -14,10 +14,16 @@ go run ./cmd/sea/main.go
 to get it. Commit `config.toml` as a default configuration people can override
 if they so choose.
 
+You can run Go tests like so:
+
+```sh
+go test ./...
+```
+
 You may validate that the nginx configuration works with the docker compose file
 like so:
 
-```
+```sh
 # Leave an nginx docker image running on port 57321
 docker compose up
 # Check a redirect. The hostname comes from `server_name` in `config.toml`
