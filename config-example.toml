@@ -1,5 +1,10 @@
-listen = 3001
+listen = 80
+listen_ssl = 443
 server_name = "your.site"
+# ssl_certificate = "/etc/letsencrypt/live/your.site/fullchain.pem"
+# ssl_certificate_key = "/etc/letsencrypt/live/your.site/privkey.pem"
+# letsencrypt = true
+# redirect_http = true
 
 [[custom_keywords]]
 phrase = "nginx"

@@ -41,6 +41,30 @@ map $dest $target {
 {{- end }}
 }
 
+{{ if gt .ListenSSL 0 }}
+server {
+    listen {{ .ListenSSL }} ssl http2;
+    server_name {{ .ServerName }};
+{{- if .SSLCertificate }}
+    ssl_certificate {{ .SSLCertificate }};
+    ssl_certificate_key {{ .SSLCertificateKey }};
+{{- if .LetsEncrypt }}
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+{{- end }}
+{{- end }}
+
+    location / {
+        return 302 $target;
+    }
+}
+{{ if .RedirectHTTP }}
+server {
+    listen {{ .Listen }};
+    server_name {{ .ServerName }};
+    return 301 https://$host$request_uri;
+}
+{{ else }}
 server {
     listen {{ .Listen }};
     server_name {{ .ServerName }};
@@ -49,4 +73,15 @@ server {
         return 302 $target;
     }
 }
+{{ end }}
+{{ else }}
+server {
+    listen {{ .Listen }};
+    server_name {{ .ServerName }};
+
+    location / {
+        return 302 $target;
+    }
+}
+{{ end }}
 

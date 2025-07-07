@@ -14,9 +14,14 @@ import (
 
 // Config represents the TOML configuration structure.
 type Config struct {
-	Listen         int           `toml:"listen"`
-	ServerName     string        `toml:"server_name"`
-	CustomKeywords []KeywordRule `toml:"custom_keywords"`
+	Listen            int           `toml:"listen"`
+	ListenSSL         int           `toml:"listen_ssl"`
+	ServerName        string        `toml:"server_name"`
+	SSLCertificate    string        `toml:"ssl_certificate"`
+	SSLCertificateKey string        `toml:"ssl_certificate_key"`
+	LetsEncrypt       bool          `toml:"letsencrypt"`
+	RedirectHTTP      bool          `toml:"redirect_http"`
+	CustomKeywords    []KeywordRule `toml:"custom_keywords"`
 }
 
 // TemplateData combines the parsed configuration with the destination
@@ -56,7 +61,11 @@ func main() {
 }
 
 func loadConfig(path string) (Config, error) {
-	cfg := Config{Listen: 80, ServerName: "search.localhost"}
+	cfg := Config{
+		Listen:     80,
+		ListenSSL:  0,
+		ServerName: "search.localhost",
+	}
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
