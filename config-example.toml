@@ -1,6 +1,7 @@
 listen = 80
 listen_ssl = 443
 server_name = "your.site"
+# logging_enabled = true
 # ssl_certificate = "/etc/letsencrypt/live/your.site/fullchain.pem"
 # ssl_certificate_key = "/etc/letsencrypt/live/your.site/privkey.pem"
 # letsencrypt = true

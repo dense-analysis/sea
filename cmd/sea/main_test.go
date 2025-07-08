@@ -23,6 +23,8 @@ server_name = "example.com"
 
 redirect_http = true
 
+logging_enabled = false
+
 ssl_certificate = "/tmp/full.pem"
 ssl_certificate_key = "/tmp/key.pem"
 letsencrypt = true
@@ -52,6 +54,9 @@ dest = "google"`)
 	if !cfg.LetsEncrypt {
 		t.Error("expected letsencrypt true")
 	}
+	if cfg.LoggingEnabled {
+		t.Error("expected logging_enabled false")
+	}
 	if cfg.ServerName != "example.com" {
 		t.Errorf("expected server name example.com, got %s", cfg.ServerName)
 	}
@@ -65,10 +70,11 @@ dest = "google"`)
 
 func TestGenerateNginx(t *testing.T) {
 	cfg := Config{
-		Listen:       8080,
-		ListenSSL:    8443,
-		ServerName:   "example.com",
-		RedirectHTTP: true,
+		Listen:         8080,
+		ListenSSL:      8443,
+		ServerName:     "example.com",
+		LoggingEnabled: false,
+		RedirectHTTP:   true,
 		CustomKeywords: []KeywordRule{{
 			Phrase: "foo",
 			Dest:   "google",
@@ -86,5 +92,11 @@ func TestGenerateNginx(t *testing.T) {
 	}
 	if !strings.Contains(out, "~*(?i)^foo$") {
 		t.Errorf("generated config missing custom rule: %s", out)
+	}
+	if !strings.Contains(out, "access_log off;") {
+		t.Errorf("generated config missing access log disable: %s", out)
+	}
+	if !strings.Contains(out, "error_log /dev/null  crit;") {
+		t.Errorf("generated config missing error log disable: %s", out)
 	}
 }

@@ -21,6 +21,7 @@ type Config struct {
 	SSLCertificateKey string        `toml:"ssl_certificate_key"`
 	LetsEncrypt       bool          `toml:"letsencrypt"`
 	RedirectHTTP      bool          `toml:"redirect_http"`
+	LoggingEnabled    bool          `toml:"logging_enabled"`
 	CustomKeywords    []KeywordRule `toml:"custom_keywords"`
 }
 
@@ -61,9 +62,10 @@ func main() {
 
 func loadConfig(path string) (Config, error) {
 	cfg := Config{
-		Listen:     80,
-		ListenSSL:  0,
-		ServerName: "search.localhost",
+		Listen:         80,
+		ListenSSL:      0,
+		ServerName:     "search.localhost",
+		LoggingEnabled: true,
 	}
 	data, err := os.ReadFile(path)
 	if err != nil {
