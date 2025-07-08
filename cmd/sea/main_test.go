@@ -23,8 +23,6 @@ server_name = "example.com"
 
 redirect_http = true
 
-logging_enabled = false
-
 ssl_certificate = "/tmp/full.pem"
 ssl_certificate_key = "/tmp/key.pem"
 letsencrypt = true

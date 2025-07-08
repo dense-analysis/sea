@@ -65,7 +65,7 @@ func loadConfig(path string) (Config, error) {
 		Listen:         80,
 		ListenSSL:      0,
 		ServerName:     "search.localhost",
-		LoggingEnabled: true,
+		LoggingEnabled: false,
 	}
 	data, err := os.ReadFile(path)
 	if err != nil {
