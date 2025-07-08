@@ -35,6 +35,9 @@ vim config.toml
 go run cmd/sea/main.go > sea.conf
 ```
 
+Set `logging_enabled = false` in `config.toml` if you want to disable NGINX
+access and error logs for the server blocks.
+
 ### TLS / Let's Encrypt
 
 If you want to run SEA behind HTTPS using Certbot, set `listen_ssl`,

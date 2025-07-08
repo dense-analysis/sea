@@ -48,6 +48,10 @@ server {
     listen {{ .ListenSSL }} ssl http2;
     listen [::]:{{ .ListenSSL }} ssl http2;
     server_name {{ .ServerName }};
+    {{- if not .LoggingEnabled }}
+    access_log off;
+    error_log /dev/null  crit;
+    {{- end }}
     keepalive_timeout 5;
 {{- if .SSLCertificate }}
     ssl_certificate {{ .SSLCertificate }};
@@ -71,6 +75,10 @@ server {
     listen {{ .Listen }};
     listen [::]:{{ .Listen }};
     server_name {{ .ServerName }};
+    {{- if not .LoggingEnabled }}
+    access_log off;
+    error_log /dev/null  crit;
+    {{- end }}
 
     return 404;
 }
@@ -79,6 +87,10 @@ server {
     listen {{ .Listen }};
     listen [::]:{{ .Listen }};
     server_name {{ .ServerName }};
+    {{- if not .LoggingEnabled }}
+    access_log off;
+    error_log /dev/null  crit;
+    {{- end }}
 
     location / {
         return 302 $sea_target;
@@ -90,6 +102,10 @@ server {
     listen {{ .Listen }};
     listen [::]:{{ .Listen }};
     server_name {{ .ServerName }};
+    {{- if not .LoggingEnabled }}
+    access_log off;
+    error_log /dev/null  crit;
+    {{- end }}
 
     location / {
         return 302 $sea_target;
