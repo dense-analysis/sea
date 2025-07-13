@@ -98,3 +98,14 @@ func TestGenerateNginx(t *testing.T) {
 		t.Errorf("generated config missing error log disable: %s", out)
 	}
 }
+
+func TestQuestionMarkRulePresent(t *testing.T) {
+	cfg := Config{}
+	out, err := generateNginx(cfg)
+	if err != nil {
+		t.Fatalf("failed to generate nginx: %v", err)
+	}
+	if !strings.Contains(out, "\\?\\s*$") {
+		t.Errorf("question mark routing rule missing: %s", out)
+	}
+}
