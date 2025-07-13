@@ -17,6 +17,7 @@ applied to `nginx`.
   security profile, as there is no web app to exploit.
 - **Optimized Matching**: Regex rules are evaluated once per request using
   NGINX's `map` directive. Enable `pcre_jit` for the best performance.
+- **Question Detection**: Queries ending with a question mark are automatically routed to ChatGPT.
 
 ## Installation
 
